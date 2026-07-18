@@ -126,7 +126,7 @@ if st.session_state["current_page"] != "الرئيسية":
 # ------------------- عرض الواجهة الرئيسية المطورة -------------------
 if st.session_state["current_page"] == "الرئيسية":
     
-    # 📌 السطر الأول من الأيقونات: لوحة التحكم وبجانبها أصول مدى نت والتأسيس
+    # السطر الأول من الأيقونات: لوحة التحكم وبجانبها أصول مدى نت والتأسيس
     col1, col2 = st.columns(2)
     with col1:
         if st.button("📊 لوحة التحكم والتقارير"):
@@ -137,7 +137,7 @@ if st.session_state["current_page"] == "الرئيسية":
             st.session_state["current_page"] = "الأصول"
             st.rerun()
             
-    # 📌 السطر الثاني من الأيقونات: المبيعات اليومية وبجانبها المصاريف والخرج
+    # السطر الثاني من الأيقونات: المبيعات اليومية وبجانبها المصاريف والخرج
     col3, col4 = st.columns(2)
     with col3:
         if st.button("💰 المبيعات اليومية - الكروت"):
@@ -148,19 +148,19 @@ if st.session_state["current_page"] == "الرئيسية":
             st.session_state["current_page"] = "المصاريف"
             st.rerun()
             
-    # 📌 السطر الثالث من الأيقونات: حركات الشركاء والرواتب لتوثيق كل الأقسام
+    # السطر الثالث من الأيقونات: حركات الشركاء والرواتب لتوثيق كل الأقسام
     col5, col6 = st.columns(2)
     with col5:
         if st.button("👤 حركات الشركاء والرواتب"):
             st.session_state["current_page"] = "الشركاء"
             st.rerun()
     with col6:
-        st.write("") # حقل متوازن لملء واجهة السطر تماماً
+        st.write("") 
 
     st.markdown("<br>", unsafe_allow_html=True)
     st.subheader("📋 الخلاصة والتقرير المالي الفوري")
     
-    # --- عرض الحسابات على شكل جدول مرتب وجميل وأنيق ومبهر ---
+    # عرض الحسابات على شكل جدول مرتب وجميل وأنيق ومبهر كما طلبت
     st.markdown(f"""
     <table class="finance-table">
         <tr>
@@ -200,10 +200,12 @@ elif st.session_state["current_page"] == "التقارير":
 
 elif st.session_state["current_page"] == "الأصول":
     st.title("📦 تسجيل أصول مدى نت")
-    with st.form("assets_form", clear_on_submit=True):
-        item = st.text_input("اسم الجهاز أو البند (مثل: ستارلينك / أتعاب تركيب):")
-        cost = st.number_input("التكلفة الإجمالية للبند:", min_value=0.0)
-        paid_me = st.number_input("المبلغ المدفوع منك أنت:")
-        paid_partner = st.number_input("المبلغ المدفوع من الشريك:")
-        file = st.file_uploader("التقط أو ارفع صورة الفاتورة/السند:", type=['jpg', 'jpeg', 'png'])
-        if st.form_submit_button("تسجيل الأصل والعودة"):
+    item = st.text_input("اسم الجهاز أو البند (مثل: ستارلينك / أتعاب تركيب):")
+    cost = st.number_input("التكلفة الإجمالية للبند:", min_value=0.0)
+    paid_me = st.number_input("المبلغ المدفوع منك أنت:")
+    paid_partner = st.number_input("المبلغ المدفوع من الشريك:")
+    file = st.file_uploader("التقط أو ارفع صورة الفاتورة/السند:", type=['jpg', 'jpeg', 'png'])
+    if st.button("حفظ وتسجيل الأصل"):
+        img_path = ""
+        if file:
+            img_path = f"documents/asset_{int(datetime.now().timestamp())}.png"
