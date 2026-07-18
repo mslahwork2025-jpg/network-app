@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 
 # إعدادات شاشة الجوال
-st.set_page_config(page_title="نظام حسابات الشبكة", page_icon="📶", layout="centered")
+st.set_page_config(page_title="شبكة مدى", page_icon="💰", layout="centered")
 
 # إجبار الواجهة على دعم الاتجاه العربي (من اليمين إلى اليسار)
 st.markdown("""
@@ -21,15 +21,15 @@ if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
 
 if not st.session_state["authenticated"]:
-    st.title("🔐 تسجيل الدخول للنظام")
-    password = st.text_input("أدخل كلمة المرور السرية للشبكة:", type="password")
+    st.title("🔐  شبكة مدى نت")
+    password = st.text_input(كلمة السر:", type="password")
     if st.button("دخول"):
         # يمكنك تغيير كلمة المرور 123456 إلى أي رقم تريده أنت وشريكك
-        if password == "123456":
+        if password == "m711528241":
             st.session_state["authenticated"] = True
             st.rerun()
         else:
-            st.error("❌ كلمة المرور غير صحيحة!")
+            st.error("❌ يا بطلة اعقل خطأ هذه !")
     st.stop()
 
 # إنشاء المجلدات الخاصة بحفظ صور الفواتير والسندات
