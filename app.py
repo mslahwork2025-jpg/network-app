@@ -4,8 +4,8 @@ import sqlite3
 import os
 from datetime import datetime
 
-# إعدادات شاشة الجوال
-st.set_page_config(page_title="شبكة مدى", page_icon="💰", layout="centered")
+# إعدادات شاشة الجوال (تم تعديل الاسم والرمز الافتراضي للشبكة 📶)
+st.set_page_config(page_title="مدى نت", page_icon="📶", layout="centered")
 
 # إجبار الواجهة على دعم الاتجاه العربي (من اليمين إلى اليسار)
 st.markdown("""
@@ -21,22 +21,22 @@ if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
 
 if not st.session_state["authenticated"]:
-    st.title("🔐  شبكة مدى نت")
-    password = st.text_input(كلمة السر:", type="password")
+    st.title("🔐 تسجيل الدخول - مدى نت")
+    password = st.text_input("أدخل كلمة المرور السرية لشبكة مدى نت:", type="password")
     if st.button("دخول"):
-        # يمكنك تغيير كلمة المرور 123456 إلى أي رقم تريده أنت وشريكك
+        # تم تعديل كلمة السر بنجاح إلى m711528241
         if password == "m711528241":
             st.session_state["authenticated"] = True
             st.rerun()
         else:
-            st.error("❌ يا بطلة اعقل خطأ هذه !")
+            st.error("❌ كلمة المرور غير صحيحة!")
     st.stop()
 
-# إنشاء المجلدات الخاصة بحفظ صور الفواتير والسندات
+# إنشاء المجلدات الخاصة بحفظ صور الفواتير والسندات لاحقاً
 if not os.path.exists("documents"):
     os.makedirs("documents")
 
-# الاتصال بقاعدة البيانات وإنشاء الجداول
+# الاتصال بقاعدة البيانات وإنشاء الجداول فارغة
 conn = sqlite3.connect("network_accounting.db", check_same_thread=False)
 cursor = conn.cursor()
 
@@ -59,14 +59,14 @@ CREATE TABLE IF NOT EXISTS partner_tx (
 conn.commit()
 
 # القائمة الجانبية للتنقل بين الأقسام بداخل التطبيق
-menu = ["📊 لوحة التحكم والتقارير", "📦 أصول المشروع والتأسيس", "💰 المبيعات اليومية (الكروت)", "📉 المصاريف والخرج", "👤 حركات الشركاء والرواتب"]
+menu = ["📊 لوحة التحكم والتقارير", "📦 أصول مدى نت والتأسيس", "💰 المبيعات اليومية (الكروت)", "📉 المصاريف والخرج", "👤 حركات الشركاء والرواتب"]
 choice = st.sidebar.radio("انتقل إلى القسم:", menu)
 
 current_date = datetime.now().strftime("%Y-%m-%d %H:%M")
 
 # ----------------- 1. لوحة التحكم والتقارير -----------------
 if choice == "📊 لوحة التحكم والتقارير":
-    st.title("📊 لوحة التحكم المالية للشبكة")
+    st.title("📊 لوحة التحكم المالية لشبكة مدى نت")
     
     sales_df = pd.read_sql_query("SELECT * FROM sales", conn)
     exp_df = pd.read_sql_query("SELECT * FROM expenses", conn)
@@ -115,9 +115,9 @@ if choice == "📊 لوحة التحكم والتقارير":
         partner_net_status = partner_share - partner_drawings
         st.info(f"الرصيد المتبقي للشريك: {partner_net_status:,.2f}")
 
-# ----------------- 2. أصول المشروع والتأسيس -----------------
-elif choice == "📦 أصول المشروع والتأسيس":
-    st.title("📦 رأس المال وأصول الشبكة")
+# ----------------- 2. أصول مدى نت والتأسيس -----------------
+elif choice == "📦 أصول مدى نت والتأسيس":
+    st.title("📦 رأس مال وأصول شبكة مدى نت")
     with st.form("assets_form", clear_on_submit=True):
         item = st.text_input("اسم الجهاز أو البند (مثل: ستارلينك / أتعاب تركيب):")
         cost = st.number_input("التكلفة الإجمالية للبند:", min_value=0.0)
@@ -134,18 +134,18 @@ elif choice == "📦 أصول المشروع والتأسيس":
             cursor.execute("INSERT INTO assets (date, item, cost, paid_me, paid_partner, image_path) VALUES (?, ?, ?, ?, ?, ?)", 
                            (current_date, item, cost, paid_me, paid_partner, img_path))
             conn.commit()
-            st.success("تم تسجيل بيانات التأسيس بنجاح!")
+            st.success("تم تسجيل بيانات التأسيس بنجاح لشبكة مدى نت!")
             
     df = pd.read_sql_query("SELECT id, date as التاريخ, item as البند, cost as التكلفة, paid_me as المدفوع_مني, paid_partner as المدفوع_من_الشريك, image_path FROM assets", conn)
     if not df.empty:
         st.dataframe(df.drop(columns=['image_path']), use_container_width=True)
         show_img = st.selectbox("اختر رقم الحركة لرؤية الفاتورة:", df['id'].tolist())
-        path = df[df['id'] == show_img]['image_path'].values[0]
+        path = df[df['id'] == show_img]['image_path'].values
         if path: st.image(path, caption="صورة سند الشراء")
 
 # ----------------- 3. المبيعات اليومية للكروت -----------------
 elif choice == "💰 المبيعات اليومية (الكروت)":
-    st.title("💰 مبيعات الكروت اليومية")
+    st.title("💰 مبيعات كروت مدى نت اليومية")
     with st.form("sales_form", clear_on_submit=True):
         shop = st.text_input("اسم السوبرماركت أو البقالة:")
         card_type = st.text_input("فئة الكرت (يومي / أسبوعي / شهري):")
@@ -158,14 +158,14 @@ elif choice == "💰 المبيعات اليومية (الكروت)":
             cursor.execute("INSERT INTO sales (date, shop, card_type, qty, total, comm, net) VALUES (?, ?, ?, ?, ?, ?, ?)", 
                            (current_date, shop, card_type, qty, total, comm, net))
             conn.commit()
-            st.success("تم تسجيل حركة المبيعات بنجاح!")
+            st.success("تم تسجيل حركة مبيعات الكروت بنجاح!")
             
     df = pd.read_sql_query("SELECT date as التاريخ, shop as البقالة, card_type as الفئة, qty as الكمية, total as الإجمالي, comm as العمولة, net as الصافي FROM sales", conn)
     st.dataframe(df, use_container_width=True)
 
 # ----------------- 4. المصاريف والخرج -----------------
 elif choice == "📉 المصاريف والخرج":
-    st.title("📉 تسجيل المصاريف والخرج التشغيلي")
+    st.title("📉 تسجيل مصاريف وخرج شبكة مدى نت")
     with st.form("exp_form", clear_on_submit=True):
         exp_type = st.selectbox("نوع المصروف:", ["ثابت (ستارلينك / يمن نت)", "متغير (طباعة كروت / صيانة)"])
         statement = st.text_input("البيان بالتفصيل:")
@@ -181,19 +181,18 @@ elif choice == "📉 المصاريف والخرج":
             cursor.execute("INSERT INTO expenses (date, type, statement, amount, image_path) VALUES (?, ?, ?, ?, ?)", 
                            (current_date, exp_type, statement, amount, img_path))
             conn.commit()
-            st.success("تم تسجيل المصروف بنجاح!")
+            st.success("تم تسجيل مصروف الشبكة بنجاح!")
             
     df = pd.read_sql_query("SELECT id, date as التاريخ, type as النوع, statement as البيان, amount as المبلغ, image_path FROM expenses", conn)
     if not df.empty:
         st.dataframe(df.drop(columns=['image_path']), use_container_width=True)
         show_img = st.selectbox("اختر رقم المصروف لرؤية صورته:", df['id'].tolist())
-        path = df[df['id'] == show_img]['image_path'].values[0]
+        path = df[df['id'] == show_img]['image_path'].values
         if path: st.image(path, caption="صورة الفاتورة")
 
 # ----------------- 5. حركات الشركاء والرواتب -----------------
 elif choice == "👤 حركات الشركاء والرواتب":
-    st.title("👤 إدارة حسابات الشركاء والرواتب")
+    st.title("👤 إدارة حسابات شركاء مدى نت والرواتب")
     with st.form("tx_form", clear_on_submit=True):
         party = st.selectbox("الطرف المعني:", ["أنا", "الشريك"])
         tx_type = st.selectbox("نوع الحركة الموثقة:", ["راتب مستحق", "سحب أرباح شخصية", "تحويل مالي للشريك"])
-        amount = st.number_input("المبلغ:")
