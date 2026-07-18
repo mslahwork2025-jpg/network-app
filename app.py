@@ -160,7 +160,7 @@ if st.session_state["current_page"] == "الرئيسية":
     st.markdown("<br>", unsafe_allow_html=True)
     st.subheader("📋 الخلاصة والتقرير المالي الفوري")
     
-    # --- عرض الحسابات على شكل جدول مرتب وجميل وأنيق ومبهر كما طلبت ---
+    # --- عرض الحسابات على شكل جدول مرتب وجميل وأنيق ومبهر ---
     st.markdown(f"""
     <table class="finance-table">
         <tr>
